@@ -1,19 +1,19 @@
+'use strict';
 
-var gulp = require('gulp'),
-    webserver = require('gulp-webserver'),
-    del = require('del'),
-    sass = require('gulp-sass'),
-    karma = require('gulp-karma'),
-    jshint = require('gulp-jshint'),
-    sourcemaps = require('gulp-sourcemaps'),
-    spritesmith = require('gulp.spritesmith'),
-    browserify = require('browserify'),
-    source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer'),
-    uglify = require('gulp-uglify'),
-    gutil = require('gulp-util'),
-    ngAnnotate = require('browserify-ngannotate');
-
+var gulp = require('gulp');
+var liveServer = require('gulp-live-server');
+var del = require('del');
+var sass = require('gulp-sass');
+var karma = require('gulp-karma');
+var jshint = require('gulp-jshint');
+var sourcemaps = require('gulp-sourcemaps');
+var spritesmith = require('gulp.spritesmith');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var uglify = require('gulp-uglify');
+var gutil = require('gulp-util');
+var ngAnnotate = require('browserify-ngannotate');
 var CacheBuster = require('gulp-cachebust');
 var cachebust = new CacheBuster();
 
@@ -24,9 +24,13 @@ var cachebust = new CacheBuster();
 /////////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('clean', function (cb) {
-    del([
+	/*
+	del([
         'dist'
     ], cb);
+	*/
+	
+	cb();
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +149,8 @@ gulp.task('build-js', ['clean'], function() {
 /////////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('build', [ 'clean', 'bower','build-css','build-template-cache', 'jshint', 'build-js'], function() {
-    return gulp.src('index.html')
+    
+	return gulp.src('index.html')
         .pipe(cachebust.references())
         .pipe(gulp.dest('dist'));
 });
@@ -166,13 +171,22 @@ gulp.task('watch', function() {
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-gulp.task('webserver', ['watch','build'], function() {
-    gulp.src('.')
+gulp.task('server', ['watch','build'], function() {
+    
+	var server = liveServer.new('app.js');
+	server.start();
+	
+	gulp.watch(['dist/index.html'], server.notify);
+    gulp.watch('app.js', server.start);
+	
+	/*
+	gulp.src('.')
         .pipe(webserver({
             livereload: false,
             directoryListing: true,
             open: "http://localhost:8000/dist/index.html"
         }));
+	*/
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +195,7 @@ gulp.task('webserver', ['watch','build'], function() {
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-gulp.task('dev', ['watch', 'webserver']);
+gulp.task('dev', ['server']);
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
