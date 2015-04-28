@@ -3,8 +3,8 @@
 var gulp = require('gulp');
 var liveServer = require('gulp-live-server');
 var del = require('del');
+var args = require('yargs').argv;
 var git = require('gulp-git');
-var prompt = require('gulp-prompt');
 var sass = require('gulp-sass');
 var karma = require('gulp-karma');
 var jshint = require('gulp-jshint');
@@ -193,18 +193,12 @@ gulp.task('server', ['watch','build'], function() {
 
 gulp.task('push', function() {
 	
-	return gulp.src('.')
-		.pipe(prompt.prompt({
-			type: 'input',
-			name: 'message',
-			message: 'Please enter a commit message.'
-		}, 
-		function( response ){
-			gulp.src('.')
-			.pipe(git.add({args: '', quiet: true}))
-			.pipe(git.commit(response.message))
-			.pipe(git.push('origin'));
-		}));
+	gulp.src('./**/*')
+	.pipe(git.add())
+	.pipe(git.commit("Test Commit"))
+	.pipe(git.push('origin'));
+	
+	return;
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
