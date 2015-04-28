@@ -193,14 +193,14 @@ gulp.task('server', ['watch','build'], function() {
 
 gulp.task('push', function() {
 	
-	return gulp.src('')
+	return gulp.src('.')
 		.pipe(prompt.prompt({
 			type: 'input',
 			name: 'message',
 			message: 'Please enter a commit message.'
 		}, 
 		function( response ){
-			gulp.src('')
+			gulp.src('.')
 			.pipe(git.add({args: '', quiet: true}))
 			.pipe(git.commit(response.message))
 			.pipe(git.push('origin'));
