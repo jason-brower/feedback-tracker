@@ -193,12 +193,10 @@ gulp.task('server', ['watch','build'], function() {
 
 gulp.task('push', function() {
 	
-	gulp.src('./**/*')
+	return gulp.src('.')
 	.pipe(git.add())
 	.pipe(git.commit("Test Commit"))
 	.pipe(git.push('origin'));
-	
-	return;
 });
 
 /////////////////////////////////////////////////////////////////////////////////////
